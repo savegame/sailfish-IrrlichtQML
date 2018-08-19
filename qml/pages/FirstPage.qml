@@ -43,67 +43,78 @@ Page {
         IrrQuickItem {
             id: irrItem
             anchors.fill: parent
+            focus: true
         }
+    }
+
+    Button {
+        text: qsTr("Quake 3 Map")
+        anchors {
+            margins: Theme.paddingMedium
+            left: parent.left
+            top: parent.top
+        }
+        onClicked: irrItem.loadExample(16)
     }
 
     // To enable PullDownMenu, place our content in a SilicaFlickable
-    SilicaFlickable {
-        anchors.fill: parent
+//    SilicaFlickable {
+//        anchors.fill: parent
 
-        // PullDownMenu and PushUpMenu must be declared in SilicaFlickable, SilicaListView or SilicaGridView
-        PullDownMenu {
-            MenuItem {
-                text: qsTr("0. Reset Scene")
-                onClicked: {
-                    irrItem.loadExample(0);
-                }
-            }
-            MenuItem {
-                text: qsTr("1. Hello World")
-                onClicked: {
-                    irrItem.loadExample(1);
-                }
-            }
-            MenuItem {
-                text: qsTr("2. Quake 3 Map")
-                onClicked: {
-                    irrItem.loadExample(2);
-                }
-            }
-            MenuItem {
-                text: qsTr("11. Per Pixel Lighting")
-                onClicked: {
-                    irrItem.loadExample(11);
-                }
-            }
-            MenuItem {
-                text: qsTr("16. Quake 3 Map Shader")
-                onClicked: {
-                    irrItem.loadExample(16);
-                }
-            }
-        }
+//        // PullDownMenu and PushUpMenu must be declared in SilicaFlickable, SilicaListView or SilicaGridView
+//        PullDownMenu {
+//            MenuItem {
+//                text: qsTr("0. Reset Scene")
+//                onClicked: {
+//                    irrItem.loadExample(0);
+//                }
+//            }
+//            MenuItem {
+//                text: qsTr("1. Hello World")
+//                onClicked: {
+//                    irrItem.loadExample(1);
+//                }
+//            }
+//            MenuItem {
+//                text: qsTr("2. Quake 3 Map")
+//                onClicked: {
+//                    irrItem.loadExample(2);
+//                }
+//            }
+//            MenuItem {
+//                text: qsTr("11. Per Pixel Lighting")
+//                onClicked: {
+//                    irrItem.loadExample(11);
+//                }
+//            }
+//            MenuItem {
+//                text: qsTr("16. Quake 3 Map Shader")
+//                onClicked: {
+//                    irrItem.loadExample(16);
+//                }
+//            }
+//        }
 
-        // Tell SilicaFlickable the height of its content.
-        contentHeight: column.height
+//        // Tell SilicaFlickable the height of its content.
+//        contentHeight: column.height
 
-        // Place our content in a Column.  The PageHeader is always placed at the top
-        // of the page, followed by our content.
-        Column {
-            id: column
+//        // Place our content in a Column.  The PageHeader is always placed at the top
+//        // of the page, followed by our content.
+//        Column {
+//            id: column
 
-            width: page.width
-            spacing: Theme.paddingLarge
-            PageHeader {
-                title: qsTr("UI Template")
-            }
-            Label {
-                x: Theme.horizontalPageMargin
-                text: qsTr("Hello Sailors")
-                color: Theme.secondaryHighlightColor
-                font.pixelSize: Theme.fontSizeExtraLarge
-            }
-        }
-    }
+//            width: page.width
+//            spacing: Theme.paddingLarge
+//            PageHeader {
+//                title: qsTr("UI Template")
+//            }
+//            Label {
+//                x: Theme.horizontalPageMargin
+//                text: qsTr("Hello Sailors")
+//                color: Theme.secondaryHighlightColor
+//                font.pixelSize: Theme.fontSizeExtraLarge
+//            }
+//        }
+//    }
 }
 

@@ -44,9 +44,15 @@ signals:
 
 protected slots:
 	void windowChangedSlot( QQuickWindow* window );
+	void windowStateChanged(Qt::WindowState s);
 protected:
 	QSGNode* updatePaintNode( QSGNode* oldNode, UpdatePaintNodeData* updatePaintNodeData ) override;
-	void touchEvent(QTouchEvent *event);
+	void touchEvent(QTouchEvent *event) override;
+	void focusInEvent(QFocusEvent * event) override
+	{
+		forceActiveFocus();
+		event->accept();
+	}
 
 	QRectF _geometry;
 	IVideoDriver    *m_driver;

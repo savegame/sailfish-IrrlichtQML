@@ -479,10 +479,19 @@ void IrrlichtQuickItem::_load_example_16()
 void IrrlichtQuickItem::windowChangedSlot(QQuickWindow *window)
 {
 	if ( window != NULL )
+	{
+		connect(window,SIGNAL(windowStateChanged(Qt::WindowState)), SLOT(windowStateChanged(Qt::WindowState)));
 		window->setClearBeforeRendering( false );
+	}
 	else if( m_device ) {
+		qWarning() << "Drop Irrlicht device";
 		m_device->drop();
 	}
+}
+
+void IrrlichtQuickItem::windowStateChanged(Qt::WindowState s)
+{
+	qDebug() << "Window state is " << s;
 }
 
 QSGNode *IrrlichtQuickItem::updatePaintNode(QSGNode *oldNode, QQuickItem::UpdatePaintNodeData *updatePaintNodeData)
@@ -517,7 +526,7 @@ QSGNode *IrrlichtQuickItem::updatePaintNode(QSGNode *oldNode, QQuickItem::Update
 			m_scene->getActiveCamera()->setAspectRatio( _geometry.width() / _geometry.height() );
 		}
 	}
-	if(window()->isVisible())
+	if(window()->isActive() && window()->windowState() == Qt::WindowFullScreen)
 	{
 		m_device->run();
 		m_driver->beginScene(true,true, SColor(255,140,140,140) );
@@ -549,7 +558,7 @@ void IrrlichtQuickItem::touchEvent(QTouchEvent *event)
 		break;
 	}
 	e.TouchInput.ID = event->touchPoints().first().id();
-	e.TouchInput.X = event->touchPoints().first().pos().x();
-	e.TouchInput.Y = event->touchPoints().first().pos().y();
+	e.TouchInput.X = event->touchPoints().first().pos().x() * 100;
+	e.TouchInput.Y = event->touchPoints().first().pos().y() * 100;
 	m_device->postEventFromUser(e);
 }
