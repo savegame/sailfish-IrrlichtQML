@@ -19,9 +19,9 @@ public:
 	IrrlichtQuickItem();
 	~IrrlichtQuickItem();
 
-	typedef void (IrrlichtQuickItem::*initFunc)();
-	initFunc init;
-
+	typedef void (IrrlichtQuickItem::*tFunc)();
+	tFunc init;
+	tFunc init_materials;
 
 
 	Q_INVOKABLE void loadExample(int index);
@@ -30,7 +30,9 @@ protected:
 	bool clear_scene();
 
 	void _first_init();
-	void _empty_init() {}
+	void _recreate_materials();
+
+	void _empty_func() {}
 
 	const io::path getExampleMediaPath();
 
@@ -45,6 +47,8 @@ signals:
 protected slots:
 	void windowChangedSlot( QQuickWindow* window );
 	void windowStateChanged(Qt::WindowState s);
+	void cleanup();
+
 protected:
 	QSGNode* updatePaintNode( QSGNode* oldNode, UpdatePaintNodeData* updatePaintNodeData ) override;
 	void touchEvent(QTouchEvent *event) override;

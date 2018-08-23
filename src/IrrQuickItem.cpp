@@ -80,7 +80,7 @@ void IrrlichtQuickItem::loadExample(int index)
 {
 
 	if(!clear_scene()) {
-		init = &IrrlichtQuickItem::_empty_init;
+		init = &IrrlichtQuickItem::_empty_func;
 		return;
 	}
 
@@ -140,7 +140,14 @@ void IrrlichtQuickItem::_first_init()
 
 	createCube();
 
-	init = &IrrlichtQuickItem::_empty_init;
+	init = &IrrlichtQuickItem::_empty_func;
+	init_materials = &IrrlichtQuickItem::_empty_func;
+}
+
+void IrrlichtQuickItem::_recreate_materials()
+{
+	((CQGLFunctionsDriver*)m_driver)->createMaterialRenderers();
+	init_materials = &IrrlichtQuickItem::_empty_func;
 }
 
 const io::path IrrlichtQuickItem::getExampleMediaPath()
@@ -163,7 +170,7 @@ void IrrlichtQuickItem::_load_example_1()
 	{
 		// TODO here need use signal of bad scene, for QML
 		clear_scene();
-		init = &IrrlichtQuickItem::_empty_init;
+		init = &IrrlichtQuickItem::_empty_func;
 		return;
 	}
 	IAnimatedMeshSceneNode* node = smgr->addAnimatedMeshSceneNode( mesh );
@@ -176,7 +183,7 @@ void IrrlichtQuickItem::_load_example_1()
 	smgr->addCameraSceneNode(0, vector3df(0,30,-40), vector3df(0,5,0));
 	/** end example 1 */
 	/** set epmty fuctions pointer */
-	init = &IrrlichtQuickItem::_empty_init;
+	init = &IrrlichtQuickItem::_empty_func;
 }
 
 void IrrlichtQuickItem::_load_example_2()
@@ -198,7 +205,7 @@ void IrrlichtQuickItem::_load_example_2()
 	*/
 //	m_device->getCursorControl()->setVisible(false);
 	/** set epmty fuctions pointer */
-	init = &IrrlichtQuickItem::_empty_init;
+	init = &IrrlichtQuickItem::_empty_func;
 }
 
 void IrrlichtQuickItem::_load_example_11()
@@ -337,7 +344,7 @@ void IrrlichtQuickItem::_load_example_11()
 	ps->setMaterialTexture(0, driver->getTexture(mediaPath + "fireball.bmp"));
 	ps->setMaterialType(video::EMT_TRANSPARENT_ADD_COLOR);
 	/** set epmty fuctions pointer */
-	init = &IrrlichtQuickItem::_empty_init;
+	init = &IrrlichtQuickItem::_empty_func;
 }
 
 void IrrlichtQuickItem::_load_example_16()
@@ -473,7 +480,7 @@ void IrrlichtQuickItem::_load_example_16()
 	// show the driver logo
 	const core::position2di pos((s32)window()->geometry().width()- 128, (s32)window()->geometry().height() - 64);
 
-	init = &IrrlichtQuickItem::_empty_init;
+	init = &IrrlichtQuickItem::_empty_func;
 }
 
 void IrrlichtQuickItem::windowChangedSlot(QQuickWindow *window)
@@ -481,11 +488,14 @@ void IrrlichtQuickItem::windowChangedSlot(QQuickWindow *window)
 	if ( window != NULL )
 	{
 		connect(window,SIGNAL(windowStateChanged(Qt::WindowState)), SLOT(windowStateChanged(Qt::WindowState)));
+		connect(window, &QQuickWindow::sceneGraphInvalidated, this, &IrrlichtQuickItem::cleanup, Qt::DirectConnection);
 		window->setClearBeforeRendering( false );
 	}
 	else if( m_device ) {
 		qWarning() << "Drop Irrlicht device";
 		m_device->drop();
+		m_device = nullptr;
+		init = &IrrlichtQuickItem::_first_init;
 	}
 }
 
@@ -494,17 +504,29 @@ void IrrlichtQuickItem::windowStateChanged(Qt::WindowState s)
 	qDebug() << "Window state is " << s;
 }
 
+void IrrlichtQuickItem::cleanup()
+{
+	qWarning() << "Scene graph context is invalidated!";
+	qDebug() << "It seems to need recreate all shaders";
+//	m_driver->re
+	((CQGLFunctionsDriver*)m_driver)->deleteAllMaterialRenderers();
+	init_materials = &IrrlichtQuickItem::_recreate_materials;
+}
+
 QSGNode *IrrlichtQuickItem::updatePaintNode(QSGNode *oldNode, QQuickItem::UpdatePaintNodeData *updatePaintNodeData)
 {
 	QSGNode* node = oldNode;
 	if ( node == NULL )
 		node = new QSGNode();
+	QOpenGLContext* context = window()->openglContext();
+	if(!isVisible() || !context || !context->isValid() )
+		return node;
+	QOpenGLFunctions* openGLFunctions = context->functions();
+	openGLFunctions->initializeOpenGLFunctions();
 
 	QPointF pos = mapToScene( QPointF( 0.0f, 0.0f ) );
 	pos.setY( window()->height() - height() - pos.y() );
 	QRectF geometry = QRectF( pos.x(), pos.y(), width(), height() );
-
-	QOpenGLFunctions* openGLFunctions = window()->openglContext()->functions();
 
 	(this->*init)();
 
@@ -512,6 +534,8 @@ QSGNode *IrrlichtQuickItem::updatePaintNode(QSGNode *oldNode, QQuickItem::Update
 		return node;
 
 	((CQGLFunctionsDriver*)m_driver)->m_functions = openGLFunctions;
+
+	(this->*init_materials)();
 
 	if ( geometry != _geometry)
 	{
@@ -526,7 +550,7 @@ QSGNode *IrrlichtQuickItem::updatePaintNode(QSGNode *oldNode, QQuickItem::Update
 			m_scene->getActiveCamera()->setAspectRatio( _geometry.width() / _geometry.height() );
 		}
 	}
-	if(window()->isActive() && window()->windowState() == Qt::WindowFullScreen)
+//	if(window()->isActive() && window()->windowState() == Qt::WindowFullScreen)
 	{
 		m_device->run();
 		m_driver->beginScene(true,true, SColor(255,140,140,140) );
@@ -534,10 +558,10 @@ QSGNode *IrrlichtQuickItem::updatePaintNode(QSGNode *oldNode, QQuickItem::Update
 		m_scene->drawAll();
 		m_device->getGUIEnvironment()->drawAll();
 		m_driver->endScene();
+		window()->resetOpenGLState();
+		node->markDirty( QSGNode::DirtyForceUpdate );
+		emit updateSignal();
 	}
-	window()->resetOpenGLState();
-	node->markDirty( QSGNode::DirtyForceUpdate );
-	emit updateSignal();
 	return node;
 }
 
@@ -558,7 +582,7 @@ void IrrlichtQuickItem::touchEvent(QTouchEvent *event)
 		break;
 	}
 	e.TouchInput.ID = event->touchPoints().first().id();
-	e.TouchInput.X = event->touchPoints().first().pos().x() * 100;
-	e.TouchInput.Y = event->touchPoints().first().pos().y() * 100;
+	e.TouchInput.X = event->touchPoints().first().pos().x() * 200;
+	e.TouchInput.Y = event->touchPoints().first().pos().y() * 200;
 	m_device->postEventFromUser(e);
 }

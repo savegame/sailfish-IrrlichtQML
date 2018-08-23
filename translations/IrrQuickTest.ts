@@ -11,31 +11,7 @@
 <context>
     <name>FirstPage</name>
     <message>
-        <source>UI Template</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Hello Sailors</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>0. Reset Scene</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>1. Hello World</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>2. Quake 3 Map</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>11. Per Pixel Lighting</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>16. Quake 3 Map Shader</source>
+        <source>Quake 3 Map</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
