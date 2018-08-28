@@ -37,6 +37,7 @@
 
 #include <sailfishapp.h>
 #include "IrrQuickItem.h"
+#include "IrrQuickItemV2.h"
 //#include "libs/irrlicht/source/qt/IrrQuick.h"
 
 int main(int argc, char *argv[])
@@ -53,6 +54,7 @@ int main(int argc, char *argv[])
 	QScopedPointer<QGuiApplication> app(SailfishApp::application(argc, argv));
 
 	qmlRegisterType<IrrlichtQuickItem>("ru.sashikknox",1,0, "IrrQuickItem");
+	qmlRegisterType<IrrQuickItem>("ru.sashikknox",1,0, "IrrQuickItem2");
 
 	QScopedPointer<QQuickView> view(SailfishApp::createView());
 	view->setSource( SailfishApp::pathTo("qml/IrrQuickTest.qml") );

@@ -11,6 +11,7 @@ using namespace irr;
 using namespace video;
 using namespace core;
 using namespace scene;
+class QOpenGLContext;
 
 class IrrlichtQuickItem : public QQuickItem
 {
@@ -62,6 +63,7 @@ protected:
 	IVideoDriver    *m_driver;
 	ISceneManager   *m_scene;
 	IrrlichtDevice  *m_device;
+	QOpenGLContext  *m_context;
 };
 
 #endif // IRRQUICKITEM_H
