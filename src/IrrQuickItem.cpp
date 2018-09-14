@@ -586,22 +586,26 @@ QSGNode *IrrlichtQuickItem::updatePaintNode(QSGNode *oldNode, QQuickItem::Update
 
 void IrrlichtQuickItem::touchEvent(QTouchEvent *event)
 {
-	SEvent e;
-	e.EventType = EET_TOUCH_INPUT_EVENT;
-	switch(event->touchPointStates())
+	foreach(QTouchEvent::TouchPoint point, event->touchPoints())
 	{
-	case Qt::TouchPointPressed:
-		e.TouchInput.Event = ETIE_PRESSED_DOWN;
-		break;
-	case Qt::TouchPointMoved:
-		e.TouchInput.Event = ETIE_MOVED;
-		break;
-	case Qt::TouchPointReleased:
-		e.TouchInput.Event = ETIE_LEFT_UP;
-		break;
+		SEvent e;
+		e.EventType = EET_TOUCH_INPUT_EVENT;
+		switch(point.state())
+		{
+		case Qt::TouchPointPressed:
+			e.TouchInput.Event = ETIE_PRESSED_DOWN;
+			break;
+		case Qt::TouchPointMoved:
+			e.TouchInput.Event = ETIE_MOVED;
+			break;
+		case Qt::TouchPointReleased:
+			e.TouchInput.Event = ETIE_LEFT_UP;
+			break;
+		}
+
+		e.TouchInput.ID = point.id();
+		e.TouchInput.X = point.pos().x() * 200;
+		e.TouchInput.Y = point.pos().y() * 200;
+		m_device->postEventFromUser(e);
 	}
-	e.TouchInput.ID = event->touchPoints().first().id();
-	e.TouchInput.X = event->touchPoints().first().pos().x() * 200;
-	e.TouchInput.Y = event->touchPoints().first().pos().y() * 200;
-	m_device->postEventFromUser(e);
 }
