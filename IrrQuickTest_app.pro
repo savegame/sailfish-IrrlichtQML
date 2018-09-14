@@ -13,9 +13,11 @@
 TARGET = IrrQuickTest
 
 CONFIG += sailfishapp
+QT += widgets opengl
 
 DEFINES += _IRR_COMPILE_WITH_QGLFUNCTIONS_
 DEFINES += _IRR_MEDIA=\\\"/usr/share/$$TARGET/media/\\\"
+DEFINES += _APP_SHARE=\\\"/usr/share/$$TARGET/\\\"
 DEFINES += _MEDIA_PATH=\\\"/usr/share/$$TARGET/media/\\\"
 INCLUDEPATH += libs/irrlicht/include
 INCLUDEPATH += libs/irrlicht/source/qt
@@ -24,7 +26,9 @@ INCLUDEPATH += libs/irrlicht/source/Irrlicht
 LIBS += -L$$OUT_PWD/lib -lirrlicht -lpng -lz
 SOURCES += src/IrrQuickTest.cpp \
     src/IrrQuickItem.cpp \
-    src/IrrQuickItemV2.cpp
+    src/IrrQuickItemV2.cpp \
+    src/irrglwidget.cpp \
+    src/glwidget.cpp
 
 DISTFILES += qml/IrrQuickTest.qml \
     qml/cover/CoverPage.qml \
@@ -56,4 +60,6 @@ TRANSLATIONS += translations/IrrQuickTest-de.ts
 
 HEADERS += \
     src/IrrQuickItem.h \
-    src/IrrQuickItemV2.h
+    src/IrrQuickItemV2.h \
+    src/irrglwidget.h \
+    src/glwidget.h

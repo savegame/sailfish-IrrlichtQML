@@ -31,11 +31,46 @@
 import QtQuick 2.0
 import Sailfish.Silica 1.0
 import "pages"
+import ru.sashikknox 1.0
 
 ApplicationWindow
 {
+    id: appWindow
+
+    Component.onCompleted: {
+        appWindow._persistentOpenGLContext = true;
+        appWindow._persistentSceneGraph = true;
+    }
+
     initialPage: Component { FirstPage {} }
     cover: null //Qt.resolvedUrl("cover/CoverPage.qml")
     allowedOrientations: defaultAllowedOrientations
+
+
+//    initialPage: MultiPointTouchArea {
+//        anchors.fill:parent
+//        IrrQuickItem2 {
+//            id: irrItem
+//            anchors.fill: parent
+//            focus: true
+
+//            SequentialAnimation on t {
+//                NumberAnimation { to: 1; duration: 2500; easing.type: Easing.InQuad }
+//                NumberAnimation { to: 0; duration: 2500; easing.type: Easing.OutQuad }
+//                loops: Animation.Infinite
+//                running: true
+//            }
+//        }
+
+//        Button {
+//            text: qsTr("Quake 3 Map")
+//            anchors {
+//                margins: Theme.paddingMedium
+//                left: parent.left
+//                top: parent.top
+//            }
+//            onClicked: irrItem.loadExample(16)
+//        }
+//    }
 }
 

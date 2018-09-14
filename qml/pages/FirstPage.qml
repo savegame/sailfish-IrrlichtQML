@@ -40,17 +40,17 @@ Page {
 
     MultiPointTouchArea {
         anchors.fill:parent
-        IrrQuickItem2 {
+        IrrQuickItem {
             id: irrItem
             anchors.fill: parent
             focus: true
 
-            SequentialAnimation on t {
-                NumberAnimation { to: 1; duration: 2500; easing.type: Easing.InQuad }
-                NumberAnimation { to: 0; duration: 2500; easing.type: Easing.OutQuad }
-                loops: Animation.Infinite
-                running: true
-            }
+//            SequentialAnimation on t {
+//                NumberAnimation { to: 1; duration: 2500; easing.type: Easing.InQuad }
+//                NumberAnimation { to: 0; duration: 2500; easing.type: Easing.OutQuad }
+//                loops: Animation.Infinite
+//                running: true
+//            }
         }
     }
 

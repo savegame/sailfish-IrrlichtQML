@@ -65,6 +65,8 @@ void IrrQuickItem::handleWindowChanged(QQuickWindow *window)
 		connect(window, &QQuickWindow::beforeSynchronizing, this, &IrrQuickItem::sync, Qt::DirectConnection );
 		connect(window, &QQuickWindow::sceneGraphInvalidated, this, &IrrQuickItem::cleanup, Qt::DirectConnection );
 		window->setClearBeforeRendering(false);
+		window->setPersistentSceneGraph(true);
+		window->setPersistentOpenGLContext(true);
 	}
 }
 

@@ -33,11 +33,14 @@
 #include <QtQml>
 #include <QScopedPointer>
 #include <QCoreApplication>
+#include <QApplication>
 //#endif
 
 #include <sailfishapp.h>
 #include "IrrQuickItem.h"
 #include "IrrQuickItemV2.h"
+#include "irrglwidget.h"
+#include "glwidget.h"
 //#include "libs/irrlicht/source/qt/IrrQuick.h"
 
 int main(int argc, char *argv[])
@@ -51,14 +54,19 @@ int main(int argc, char *argv[])
 	//   - SailfishApp::pathToMainQml() to get a QUrl to the main QML file
 	//
 	// To display the view, call "show()" (will show fullscreen on device).
-	QScopedPointer<QGuiApplication> app(SailfishApp::application(argc, argv));
+	QSharedPointer<IrrGLWidget> widget;
+	QScopedPointer<QQuickView> view;
 
+	QScopedPointer<QGuiApplication> app(SailfishApp::application(argc, argv));
 	qmlRegisterType<IrrlichtQuickItem>("ru.sashikknox",1,0, "IrrQuickItem");
 	qmlRegisterType<IrrQuickItem>("ru.sashikknox",1,0, "IrrQuickItem2");
 
-	QScopedPointer<QQuickView> view(SailfishApp::createView());
+	view.reset(SailfishApp::createView());
 	view->setSource( SailfishApp::pathTo("qml/IrrQuickTest.qml") );
-	view->show();
+	foreach(QObject *object, view->engine()->children() )
+	{
 
+	}
+	view->show();
 	return app->exec();
 }

@@ -37,7 +37,7 @@ IrrlichtQuickItem::~IrrlichtQuickItem()
 		return;
 //	m_driver->drop();
 //	m_scene->drop();
-//	m_device->drop();
+	m_device->drop();
 }
 
 void IrrlichtQuickItem::createCube()
@@ -113,20 +113,20 @@ void IrrlichtQuickItem::_first_init()
 	if( !window()->openglContext() || !window()->openglContext()->functions() )
 		return;
 //	m_context = window()->openglContext()->shareContext();
-	if(!m_context )
-	{
-		m_context = new QOpenGLContext();
-		if( m_context->create() )
-		{
-			qWarning() << "Cant create context!";
-		}
-		else
-			m_context = window()->openglContext();
-		qWarning() << "SharedContext is not created!";
-	}
+//	if(!m_context )
+//	{
+//		m_context = new QOpenGLContext();
+//		if( m_context->create() )
+//		{
+//			qWarning() << "Cant create context!";
+//		}
+//		else
+//			m_context = window()->openglContext();
+//		qWarning() << "SharedContext is not created!";
+//	}
 //	context->
 
-	m_context->functions()->initializeOpenGLFunctions();
+	window()->openglContext()->functions()->initializeOpenGLFunctions();
 
 	SIrrlichtCreationParameters params;
 
@@ -145,7 +145,7 @@ void IrrlichtQuickItem::_first_init()
 	params.OGLES2ShaderPath = _MEDIA_PATH;
 	params.OGLES2ShaderPath += "Shaders/";
 	params.Vsync = false;
-	params.qOpenGLFunctions = m_context->functions();
+	params.qOpenGLFunctions = window()->openglContext()->functions();
 
 	m_device = createDeviceEx(params);
 	m_driver = m_device->getVideoDriver();
@@ -525,10 +525,10 @@ void IrrlichtQuickItem::cleanup()
 	qWarning() << "Scene graph context is invalidated!";
 	qDebug() << "It seems to need recreate all shaders";
 //	m_driver->re
-	if(m_context->isValid())
-		return;
-	((CQGLFunctionsDriver*)m_driver)->deleteAllMaterialRenderers();
-	init_materials = &IrrlichtQuickItem::_recreate_materials;
+//	if(window()->openglContext()->isValid())
+//		return;
+//	((CQGLFunctionsDriver*)m_driver)->deleteAllMaterialRenderers();
+//	init_materials = &IrrlichtQuickItem::_recreate_materials;
 }
 
 QSGNode *IrrlichtQuickItem::updatePaintNode(QSGNode *oldNode, QQuickItem::UpdatePaintNodeData *updatePaintNodeData)
@@ -536,12 +536,12 @@ QSGNode *IrrlichtQuickItem::updatePaintNode(QSGNode *oldNode, QQuickItem::Update
 	QSGNode* node = oldNode;
 	if ( node == NULL )
 		node = new QSGNode();
-	QOpenGLContext* context = m_context; //window()->openglContext();
+	QOpenGLContext* context = window()->openglContext(); //window()->openglContext();
 	if(!context) (this->*init)();
 	if(!isVisible() || !context || !context->isValid() )
 		return node;
 	QOpenGLFunctions* openGLFunctions = context->functions();
-	openGLFunctions->initializeOpenGLFunctions();
+//	openGLFunctions->initializeOpenGLFunctions();
 
 	QPointF pos = mapToScene( QPointF( 0.0f, 0.0f ) );
 	pos.setY( window()->height() - height() - pos.y() );
