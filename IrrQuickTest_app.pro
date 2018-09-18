@@ -25,10 +25,10 @@ INCLUDEPATH += libs/irrlicht/source/Irrlicht
 
 LIBS += -L$$OUT_PWD/lib -lirrlicht -lpng -lz
 SOURCES += src/IrrQuickTest.cpp \
-    src/IrrQuickItem.cpp \
-    src/IrrQuickItemV2.cpp \
-    src/irrglwidget.cpp \
-    src/glwidget.cpp
+    src/IrrQuickItem.cpp
+#    src/IrrQuickItemV2.cpp \
+#    src/irrglwidget.cpp \
+#    src/glwidget.cpp
 
 DISTFILES += qml/IrrQuickTest.qml \
     qml/cover/CoverPage.qml \
@@ -59,7 +59,7 @@ CONFIG += sailfishapp_i18n
 TRANSLATIONS += translations/IrrQuickTest-de.ts
 
 HEADERS += \
-    src/IrrQuickItem.h \
-    src/IrrQuickItemV2.h \
-    src/irrglwidget.h \
-    src/glwidget.h
+    src/IrrQuickItem.h
+#    src/IrrQuickItemV2.h \
+#    src/irrglwidget.h \
+#    src/glwidget.h

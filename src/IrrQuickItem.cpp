@@ -26,7 +26,7 @@ IrrlichtQuickItem::IrrlichtQuickItem()
 	setAcceptHoverEvents( true );
 
 	connect( this, &QQuickItem::windowChanged, this, &IrrlichtQuickItem::windowChangedSlot );
-	connect( this, &IrrlichtQuickItem::updateSignal, this, &QQuickItem::update );
+//	connect( this, &IrrlichtQuickItem::updateSignal, this, &QQuickItem::update );
 
 	init = &IrrlichtQuickItem::_first_init;
 }
@@ -112,19 +112,6 @@ void IrrlichtQuickItem::_first_init()
 {
 	if( !window()->openglContext() || !window()->openglContext()->functions() )
 		return;
-//	m_context = window()->openglContext()->shareContext();
-//	if(!m_context )
-//	{
-//		m_context = new QOpenGLContext();
-//		if( m_context->create() )
-//		{
-//			qWarning() << "Cant create context!";
-//		}
-//		else
-//			m_context = window()->openglContext();
-//		qWarning() << "SharedContext is not created!";
-//	}
-//	context->
 
 	window()->openglContext()->functions()->initializeOpenGLFunctions();
 
@@ -150,8 +137,9 @@ void IrrlichtQuickItem::_first_init()
 	m_device = createDeviceEx(params);
 	m_driver = m_device->getVideoDriver();
 	m_scene = m_device->getSceneManager();
-//	m_driver->grab();
-//	m_scene->grab();
+
+	// create render tarets
+	//m_driver->addRenderTargetTexture(params.WindowSize,"rt_depth", );
 
 	createCube();
 
@@ -504,7 +492,7 @@ void IrrlichtQuickItem::windowChangedSlot(QQuickWindow *window)
 	if ( window != NULL )
 	{
 		connect(window,SIGNAL(windowStateChanged(Qt::WindowState)), SLOT(windowStateChanged(Qt::WindowState)));
-		connect(window, &QQuickWindow::sceneGraphInvalidated, this, &IrrlichtQuickItem::cleanup, Qt::DirectConnection);
+//		connect(window, &QQuickWindow::sceneGraphInvalidated, this, &IrrlichtQuickItem::cleanup, Qt::DirectConnection);
 		window->setClearBeforeRendering( false );
 	}
 	else if( m_device ) {
@@ -537,11 +525,10 @@ QSGNode *IrrlichtQuickItem::updatePaintNode(QSGNode *oldNode, QQuickItem::Update
 	if ( node == NULL )
 		node = new QSGNode();
 	QOpenGLContext* context = window()->openglContext(); //window()->openglContext();
-	if(!context) (this->*init)();
-	if(!isVisible() || !context || !context->isValid() )
-		return node;
-	QOpenGLFunctions* openGLFunctions = context->functions();
-//	openGLFunctions->initializeOpenGLFunctions();
+
+//	if(!isVisible() || !context || !context->isValid() )
+//		return node;
+//	QOpenGLFunctions* openGLFunctions = context->functions();
 
 	QPointF pos = mapToScene( QPointF( 0.0f, 0.0f ) );
 	pos.setY( window()->height() - height() - pos.y() );
@@ -549,12 +536,7 @@ QSGNode *IrrlichtQuickItem::updatePaintNode(QSGNode *oldNode, QQuickItem::Update
 
 	(this->*init)();
 
-	if(!m_device)
-		return node;
-
-	((CQGLFunctionsDriver*)m_driver)->m_functions = openGLFunctions;
-
-	(this->*init_materials)();
+//	(this->*init_materials)();
 
 	if ( geometry != _geometry)
 	{
@@ -573,13 +555,15 @@ QSGNode *IrrlichtQuickItem::updatePaintNode(QSGNode *oldNode, QQuickItem::Update
 	{
 		m_device->run();
 		m_driver->beginScene(true,true, SColor(255,140,140,140) );
-		((CQGLFunctionsDriver*)m_driver)->irrGlUseProgram( 0 );
+//		((CQGLFunctionsDriver*)m_driver)->irrGlUseProgram( 0 );
+		QOpenGLContext::currentContext()->functions()->glUseProgram(0);
 		m_scene->drawAll();
 		m_device->getGUIEnvironment()->drawAll();
 		m_driver->endScene();
 		window()->resetOpenGLState();
 		node->markDirty( QSGNode::DirtyForceUpdate );
-		emit updateSignal();
+		update();
+//		emit updateSignal();
 	}
 	return node;
 }
@@ -608,4 +592,5 @@ void IrrlichtQuickItem::touchEvent(QTouchEvent *event)
 		e.TouchInput.Y = point.pos().y() * 200;
 		m_device->postEventFromUser(e);
 	}
+	update();
 }

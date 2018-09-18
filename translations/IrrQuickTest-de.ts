@@ -11,7 +11,7 @@
 <context>
     <name>FirstPage</name>
     <message>
-        <source>Quake 3 Map</source>
+        <source>Menu</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

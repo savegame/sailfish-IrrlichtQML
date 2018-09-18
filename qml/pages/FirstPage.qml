@@ -55,73 +55,61 @@ Page {
     }
 
     Button {
-        text: qsTr("Quake 3 Map")
+        id: menuButton
+        text: qsTr("Menu")
         anchors {
             margins: Theme.paddingMedium
             left: parent.left
             top: parent.top
         }
-        onClicked: irrItem.loadExample(16)
+//        onClicked: irrItem.loadExample(16)
+        onClicked:  {
+            flickable.visible = true
+            visible = false;
+        }
     }
 
     // To enable PullDownMenu, place our content in a SilicaFlickable
-//    SilicaFlickable {
-//        anchors.fill: parent
+    SilicaFlickable {
+        id: flickable
+        visible: false
+        anchors.fill: parent
+        anchors.margins:  Theme.paddingMedium
 
-//        // PullDownMenu and PushUpMenu must be declared in SilicaFlickable, SilicaListView or SilicaGridView
-//        PullDownMenu {
-//            MenuItem {
-//                text: qsTr("0. Reset Scene")
-//                onClicked: {
-//                    irrItem.loadExample(0);
-//                }
-//            }
-//            MenuItem {
-//                text: qsTr("1. Hello World")
-//                onClicked: {
-//                    irrItem.loadExample(1);
-//                }
-//            }
-//            MenuItem {
-//                text: qsTr("2. Quake 3 Map")
-//                onClicked: {
-//                    irrItem.loadExample(2);
-//                }
-//            }
-//            MenuItem {
-//                text: qsTr("11. Per Pixel Lighting")
-//                onClicked: {
-//                    irrItem.loadExample(11);
-//                }
-//            }
-//            MenuItem {
-//                text: qsTr("16. Quake 3 Map Shader")
-//                onClicked: {
-//                    irrItem.loadExample(16);
-//                }
-//            }
-//        }
+        // Tell SilicaFlickable the height of its content.
+        contentHeight: column.height
 
-//        // Tell SilicaFlickable the height of its content.
-//        contentHeight: column.height
+        Column {
+            id: buttons
+            spacing: Theme.paddingMedium
 
-//        // Place our content in a Column.  The PageHeader is always placed at the top
-//        // of the page, followed by our content.
-//        Column {
-//            id: column
+            Button { //1 2 16
+                text: "1. Hello World."
+                onClicked: {
+                    irrItem.loadExample(1);
+                    flickable.visible = false
+                    menuButton.visible = true
+                }
+            }
 
-//            width: page.width
-//            spacing: Theme.paddingLarge
-//            PageHeader {
-//                title: qsTr("UI Template")
-//            }
-//            Label {
-//                x: Theme.horizontalPageMargin
-//                text: qsTr("Hello Sailors")
-//                color: Theme.secondaryHighlightColor
-//                font.pixelSize: Theme.fontSizeExtraLarge
-//            }
-//        }
-//    }
+            Button { //2
+                text: "2. Quake 3 Map (No Q3 Shaders)."
+                onClicked: {
+                    irrItem.loadExample(2);
+                    flickable.visible = false
+                    menuButton.visible = true
+                }
+            }
+
+            Button { //16
+                text: "16. Quake 3 Map Shader."
+                onClicked: {
+                    irrItem.loadExample(16);
+                    flickable.visible = false
+                    menuButton.visible = true
+                }
+            }
+        }
+    }
 }
 

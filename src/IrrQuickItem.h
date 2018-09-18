@@ -42,8 +42,8 @@ protected:
 	void _load_example_11();
 	void _load_example_16();
 
-signals:
-	void updateSignal();
+//signals:
+//	void updateSignal();
 
 protected slots:
 	void windowChangedSlot( QQuickWindow* window );
